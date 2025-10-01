@@ -9,6 +9,7 @@ function Dragon(props) {
 		if (currentHealth - 20 <= 0) {
 			setCurrentHealth(0)
 			setDragonSrc("dead.avif")
+			props.addDeadDragon(props.name)
 		} else {
 			setCurrentHealth(currentHealth - 20);
 		}
@@ -17,6 +18,7 @@ function Dragon(props) {
 	const heal = () => {
 		if (currentHealth === 0) {
 			setDragonSrc(props.src)
+			props.removeDeadDragon(props.name)
 		}
 		if (currentHealth + 10 >= props.maxHealth) {
 			setCurrentHealth(props.maxHealth)

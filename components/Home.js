@@ -1,21 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 import Dragon from './Dragon';
 
 // FETCH l'url suivant : https://dragon-back.vercel.app/dragons
 
 function Home() {
-  const [dragon, setDragon] = useState(null);
+  const [dragons, setDragons] = useState([]);
+  const [deadDragons, setDeadDragons] = useState([]);
 
-  const createDragon = () => {
-    setDragon(<Dragon name="Clovis" src="dragon.webp" maxHealth={100}/>);
+  useEffect(() => {
+    fetch("https://dragon-back.vercel.app/dragons")
+    .then(response => response.json())
+    .then(data => {
+      setDragons(data.dragons);
+    })
+  }, [])
+
+  const addDeadDragon = (name) => {
+    if (!deadDragons.includes(name)) {
+      setDeadDragons([...deadDragons, name]);
+    }
+  }
+
+  const removeDeadDragon = (name) => {
+    setDeadDragons(deadDragons.filter(dragon => dragon !== name));
   }
 
   return (
     <div>
+      <div className={styles.header}>
+        <h1>Dragon Manager</h1>
+        <h3>Dead dragons: {deadDragons.join(' - ') || 'None'}</h3>
+      </div>
       <main className={styles.main}>
-        {dragon}
-        {!dragon && <button onClick={createDragon}>Create a dragon</button>}
+        {dragons.map(data => {
+          return <Dragon key={data.id} name={data.name} src={data.src} maxHealth={data.maxHealth} 
+                    addDeadDragon={addDeadDragon} removeDeadDragon={removeDeadDragon}/>
+        })}
       </main>
     </div>
   );
