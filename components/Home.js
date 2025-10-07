@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import styles from '../styles/Home.module.css';
 import Dragon from './Dragon';
+import Link from "next/link"
+import { useSelector } from 'react-redux';
 
 function Home() {
   const [deadDragons, setDeadDragons] = useState([]);
 
-  // Changer le state dragons par un store redux accessible avec useSelector
-  const [dragons, setDragons] = useState([]);
+  const dragons = useSelector(state => state.dragons.value);
 
   const addDeadDragon = (name) => {
     if (!deadDragons.includes(name)) {
@@ -25,7 +26,7 @@ function Home() {
           <h1>Dragon Manager</h1>
           <h3>Dead dragons: {deadDragons.join(' - ') || 'None'}</h3>
         </div>
-        {/* Ajouter le composant Link ici pour aller vers la page shop */}
+        <Link href="/shop">Go to shop</Link>
       </div>
       <main className={styles.main}>
         {dragons.map(data => {
